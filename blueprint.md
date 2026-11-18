@@ -6,19 +6,18 @@ Build a secure, multi-user personal finance application that teaches practical f
 
 Each user's financial data is private by default. Every server operation that reads or changes user-owned data must scope access to the authenticated user (or an explicitly authorized administrator).
 
-## Suggested baseline
+## Chosen baseline
 
-The repository currently has no application code or framework configuration. Choose one stack before implementation and record the decision in the README. A practical default for a TypeScript web app is:
+- **Web:** Next.js App Router, React, and TypeScript, organized under `src/`.
+- **Styling:** CSS modules/global CSS with shared design tokens; add a utility CSS framework only if it improves delivery.
+- **Database:** PostgreSQL with Prisma ORM and committed schema migrations.
+- **Authentication:** Auth.js with database-backed sessions; password hashing and reset flow are implemented in the auth stage.
+- **Validation:** Zod schemas shared between form feedback and server parsing.
+- **Charts:** Recharts.
+- **Receipt storage:** Private object storage in production behind a small storage adapter.
+- **Background work and email:** A provider/scheduler adapter with idempotent jobs; select concrete providers when those stages are implemented.
 
-- React with a full-stack framework (for example, Next.js) and TypeScript.
-- PostgreSQL with a migration-backed ORM (for example, Prisma or Drizzle).
-- A maintained authentication library with secure, HTTP-only session cookies.
-- Zod (or an equivalent shared schema library) for input validation.
-- Recharts or Chart.js for dashboard charts.
-- Object storage for receipts in production; local or memory-backed storage only for development.
-- A background job/scheduler mechanism for recurring transactions and email.
-
-These are defaults, not requirements. Keep UI, domain rules, persistence, and external services behind clear boundaries so alternatives can be swapped without rewriting feature logic.
+Keep UI, domain rules, persistence, and external services behind clear boundaries so alternatives can be swapped without rewriting feature logic. See `README.md` for local setup and environment configuration.
 
 ## Core design rules
 
