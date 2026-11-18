@@ -11,7 +11,7 @@ Each user's financial data is private by default. Every server operation that re
 - **Web:** Next.js App Router, React, and TypeScript, organized under `src/`.
 - **Styling:** CSS modules/global CSS with shared design tokens; add a utility CSS framework only if it improves delivery.
 - **Database:** PostgreSQL with Prisma ORM and committed schema migrations.
-- **Authentication:** Auth.js with database-backed sessions; password hashing and reset flow are implemented in the auth stage.
+- **Authentication:** Better Auth with database-backed sessions and built-in email/password reset flow.
 - **Validation:** Zod schemas shared between form feedback and server parsing.
 - **Charts:** Recharts.
 - **Receipt storage:** Private object storage in production behind a small storage adapter.
@@ -70,14 +70,14 @@ Complete a stage's exit criteria before adding the next stage. Keep each stage s
 
 - Choose and document framework, database, ORM, authentication, validation, charting, storage, and job/email approach.
 - Establish a clear feature-oriented layout, environment-variable example file, formatting/lint conventions, and local setup instructions.
-- Configure database connection and migration workflow; never commit secrets.
+- Document the database connection and migration workflow; the initial schema and migration are introduced with the data foundation in Stage 1. Never commit secrets.
 - Sketch the primary navigation and define shared design tokens (spacing, color, typography) before duplicating page styles.
 
-**Exit:** A new developer can install dependencies, configure local environment, run the app, and apply the initial migration using the README.
+**Exit:** A new developer can install dependencies, configure local environment, and run the app using the README; framework and tooling choices are recorded and ready for the database/auth foundation in Stage 1.
 
 ### Stage 1 — Data foundation and authentication
 
-- Create User and authentication/session schema using a maintained auth approach; implement sign-up, sign-in, sign-out, and protected routes.
+- Create User and authentication/session schema using Better Auth and Prisma; implement sign-up, sign-in, sign-out, and protected routes.
 - Add a server-side current-user helper and a consistent authorization failure path.
 - Add password reset by email with expiring, single-use hashed tokens and non-enumerating responses (do not reveal whether an email exists).
 - Define reusable form, field-error, button, loading, and empty-state primitives.

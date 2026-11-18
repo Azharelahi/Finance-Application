@@ -1,0 +1,43 @@
+{
+  "name": "personal-finance-app",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "db:studio": "prisma studio"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.10.1",
+    "@prisma/client": "^7.10.1",
+    "better-auth": "^1.7.25",
+    "dotenv": "^17.2.3",
+    "next": "^16.4.6",
+    "nodemailer": "^7.0.10",
+    "pg": "^8.16.3",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.0",
+    "@types/nodemailer": "^7.0.3",
+    "@types/pg": "^8.15.5",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@eslint/eslintrc": "^3.3.1",
+    "eslint": "^9.39.1",
+    "eslint-config-next": "^16.4.6",
+    "prisma": "^7.10.1",
+    "typescript": "^5.9.3"
+  }
+}
