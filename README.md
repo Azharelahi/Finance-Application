@@ -11,7 +11,11 @@ A staged full-stack expense tracker built to practice real-world application pat
 - Recharts for dashboard charts.
 - Private object storage and adapters for email and scheduled jobs when those features are added.
 
-The repository is being built in stages. The current implementation includes email/password authentication, PostgreSQL persistence, and the first protected dashboard route.
+The repository is being built in stages. The current implementation includes email/password authentication, protected routes, and owner-scoped account and category settings.
+
+## Accounts and categories
+
+Accounts and categories are private to their owner. Names are trimmed and unique per user without regard to capitalization. Archived records are hidden from active lists and selectors; their names remain reserved. Account opening balances are stored as signed integer minor units with an explicit three-letter currency code (for example, USD 12345 represents $123.45). Apply schema changes with `npm run db:migrate -- --name <migration_name>` locally and `npm run db:deploy` in deployment environments.
 
 ## Requirements
 
