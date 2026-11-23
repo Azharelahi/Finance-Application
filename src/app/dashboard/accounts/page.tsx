@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { AccountForm } from "@/features/accounts/account-form";
 import { ArchiveAccountButton } from "@/features/accounts/archive-account-button";
-import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/auth-session";
+import { listActiveAccounts } from "@/features/accounts/queries";
 
 export default async function AccountsPage() {
   const user = await requireUser();
-  const accounts = await prisma.financeAccount.findMany({ where: { ownerId: user.id, archivedAt: null }, orderBy: { name: "asc" } });
+  const accounts = await listActiveAccounts(user.id);
   return (
     <main className="dashboard-shell">
       <header className="dashboard-header">

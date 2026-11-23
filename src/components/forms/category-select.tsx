@@ -1,12 +1,9 @@
-import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/auth-session";
+import { listCategoryOptions } from "@/features/categories/queries";
 
 export async function CategorySelect({ name = "categoryId", selectedId, type }: { name?: string; selectedId?: string; type?: "INCOME" | "EXPENSE" }) {
   const user = await requireUser();
-  const categories = await prisma.category.findMany({
-    where: { ownerId: user.id, archivedAt: null, ...(type ? { type: { in: [type, "BOTH"] } } : {}) },
-    orderBy: { name: "asc" }, select: { id: true, name: true },
-  });
+  const categories = await listCategoryOptions(user.id, type);
   return (
     <div className="form-field">
       <label className="form-label" htmlFor={name}>Category</label>

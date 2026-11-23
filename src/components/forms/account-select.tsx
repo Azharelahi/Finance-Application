@@ -1,11 +1,9 @@
-import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/auth-session";
+import { listAccountOptions } from "@/features/accounts/queries";
 
 export async function AccountSelect({ name = "accountId", selectedId }: { name?: string; selectedId?: string }) {
   const user = await requireUser();
-  const accounts = await prisma.financeAccount.findMany({
-    where: { ownerId: user.id, archivedAt: null }, orderBy: { name: "asc" }, select: { id: true, name: true, currency: true },
-  });
+  const accounts = await listAccountOptions(user.id);
   return (
     <div className="form-field">
       <label className="form-label" htmlFor={name}>Account</label>

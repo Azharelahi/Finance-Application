@@ -1,13 +1,14 @@
 import Link from "next/link";
 import { SignOutButton } from "@/features/auth/sign-out-button";
 import { requireUser } from "@/lib/auth-session";
-import { prisma } from "@/lib/prisma";
+import { countActiveAccounts } from "@/features/accounts/queries";
+import { countActiveCategories } from "@/features/categories/queries";
 
 export default async function DashboardPage() {
   const user = await requireUser();
   const [accountCount, categoryCount] = await Promise.all([
-    prisma.financeAccount.count({ where: { ownerId: user.id, archivedAt: null } }),
-    prisma.category.count({ where: { ownerId: user.id, archivedAt: null } }),
+    countActiveAccounts(user.id),
+    countActiveCategories(user.id),
   ]);
   return (
     <main className="dashboard-shell">

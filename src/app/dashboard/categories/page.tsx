@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { CategoryForm } from "@/features/categories/category-form";
 import { ArchiveCategoryButton } from "@/features/categories/archive-category-button";
-import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/auth-session";
+import { listActiveCategories } from "@/features/categories/queries";
 
 export default async function CategoriesPage() {
   const user = await requireUser();
-  const categories = await prisma.category.findMany({ where: { ownerId: user.id, archivedAt: null }, orderBy: { name: "asc" } });
+  const categories = await listActiveCategories(user.id);
   return (
     <main className="dashboard-shell">
       <header className="dashboard-header">
