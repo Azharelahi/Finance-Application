@@ -85,3 +85,11 @@ export async function archiveAccount(formData: FormData): Promise<void> {
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/accounts");
 }
+
+export async function restoreAccount(formData: FormData): Promise<void> {
+  const user = await requireUser();
+  const id = recordIdSchema.safeParse(formData.get("id"));
+  if (!id.success) return;
+  await prisma.financeAccount.updateMany({ where: { id: id.data, ownerId: user.id, archivedAt: { not: null } }, data: { archivedAt: null } });
+  revalidatePath("/dashboard"); revalidatePath("/dashboard/accounts"); revalidatePath("/dashboard/archives");
+}
