@@ -20,6 +20,7 @@ model User {
   accounts        Account[]
   financeAccounts FinanceAccount[]
   categories      Category[]
+  transactions    Transaction[]
 
   @@map("user")
 }
@@ -98,6 +99,7 @@ model FinanceAccount {
   archivedAt          DateTime?
   createdAt           DateTime           @default(now())
   updatedAt           DateTime           @updatedAt
+  transactions        Transaction[]
 
   @@unique([ownerId, nameKey])
   @@index([ownerId, archivedAt])
@@ -114,8 +116,36 @@ model Category {
   archivedAt DateTime?
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt
+  transactions Transaction[]
 
   @@unique([ownerId, nameKey])
   @@index([ownerId, archivedAt])
   @@map("category")
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+}
+
+model Transaction {
+  id          String          @id @default(cuid())
+  ownerId     String
+  owner       User             @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  accountId   String
+  account     FinanceAccount   @relation(fields: [accountId], references: [id], onDelete: Restrict)
+  categoryId  String?
+  category    Category?        @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  amountMinor Int
+  currency    String           @db.Char(3)
+  type        TransactionType
+  occurredAt  DateTime         @db.Date
+  description String           @db.VarChar(240)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@index([ownerId, occurredAt, id])
+  @@index([ownerId, accountId, occurredAt])
+  @@index([ownerId, categoryId, occurredAt])
+  @@map("finance_transaction")
 }

@@ -316,6 +316,18 @@ h1 {
   line-height: 1.5;
 }
 
+.optional-label {
+  color: var(--color-muted);
+  font-size: 0.8rem;
+  font-weight: 400;
+}
+
+.settings-form .field-hint a {
+  color: var(--color-primary);
+  font-weight: 700;
+  text-underline-offset: 2px;
+}
+
 .form-inline-link {
   margin-top: -7px;
   text-align: right;
@@ -556,6 +568,24 @@ h1 {
 .empty-state h2 { color: var(--color-ink); margin-bottom: 8px; }
 .empty-state p { margin: 0; font-size: 0.9rem; line-height: 1.5; }
 .nav-button { text-decoration: none; }
+.balance-section { margin-top: 52px; }
+.section-title-row { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
+.section-title-row .eyebrow { margin-bottom: 7px; }
+.section-title-row h2 { margin-bottom: 0; font-size: 1.4rem; letter-spacing: -0.04em; }
+.balance-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
+.balance-card { display: grid; gap: 10px; padding: 18px; border: 1px solid var(--color-border); border-radius: 14px; background: var(--color-surface); }
+.balance-card span { color: var(--color-muted); font-size: 0.86rem; }
+.balance-card strong { font-size: 1.25rem; }
+.balance-empty { color: var(--color-muted); }
+.transaction-row { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 18px 20px; border: 1px solid var(--color-border); border-radius: 14px; background: var(--color-surface); color: var(--color-ink); text-decoration: none; }
+.transaction-row:hover { border-color: #b9d1c1; }
+.transaction-copy { display: grid; gap: 6px; }
+.transaction-copy small { color: var(--color-muted); }
+.transaction-amount { font-weight: 700; white-space: nowrap; }
+.transaction-amount.income { color: var(--color-primary); }
+.transaction-amount.expense { color: var(--color-ink); }
+.transaction-form-card { max-width: 580px; }
+.transaction-actions { display: flex; align-items: center; gap: 12px; }
 
 @media (max-width: 600px) {
   .settings-nav { grid-template-columns: 1fr; }

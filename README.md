@@ -11,11 +11,15 @@ A staged full-stack expense tracker built to practice real-world application pat
 - Recharts for dashboard charts.
 - Private object storage and adapters for email and scheduled jobs when those features are added.
 
-The repository is being built in stages. The current implementation includes email/password authentication, protected routes, and owner-scoped account and category settings.
+The repository is being built in stages. The current implementation includes email/password authentication, protected routes, owner-scoped account and category settings, and transaction management.
 
 ## Accounts and categories
 
 Accounts and categories are private to their owner. Names are trimmed and unique per user without regard to capitalization. Archived records are hidden from active lists and selectors; their names remain reserved. Account opening balances are stored as signed integer minor units with an explicit three-letter currency code (for example, USD 12345 represents $123.45). Apply schema changes with `npm run db:migrate -- --name <migration_name>` locally and `npm run db:deploy` in deployment environments.
+
+## Transactions and balances
+
+Transaction amounts are positive integer minor units stored with an account's currency; transaction type (`INCOME` or `EXPENSE`) determines the balance direction. Account balances are derived as opening balance + income − expenses and are grouped per account, so unlike currencies are never added together. Amount entry follows the selected currency's fraction digits and is capped at 2,000,000,000 minor units. Transaction dates are calendar dates stored at UTC midnight (PostgreSQL `DATE`), independent of the viewer's timezone. New transactions can reference only active accounts and categories owned by the signed-in user; edits can keep an already referenced archived account/category, and all other cross-user or incompatible references are rejected. Deleting a transaction removes it permanently. Apply the Stage 3 migration with `npm run db:deploy` after reviewing the generated migration.
 
 ## Requirements
 
