@@ -46,14 +46,13 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
         <p className="intro">A clear view of your income, spending, and account balances.</p>
         <div className="dashboard-status"><span className="status-dot" aria-hidden="true" /><span>Signed in as {user.email}</span></div>
       </section>
-      <nav className="settings-nav" aria-label="Finance settings">
-        <Link className="settings-nav-card" href="/dashboard/accounts"><span className="setup-icon" aria-hidden="true">$</span><span><strong>Accounts</strong><small>{accountCount} active</small></span><span className="nav-arrow" aria-hidden="true">→</span></Link>
-        <Link className="settings-nav-card" href="/dashboard/categories"><span className="setup-icon" aria-hidden="true">✦</span><span><strong>Categories</strong><small>{categoryCount} active</small></span><span className="nav-arrow" aria-hidden="true">→</span></Link>
+      <nav className="settings-nav" aria-label="Finance workspace">
+        <Link className="settings-nav-card" href="/dashboard/transactions"><span className="setup-icon" aria-hidden="true">↕</span><span><strong>Transactions</strong><small>Review, filter, export, or add activity</small></span><span className="nav-arrow" aria-hidden="true">→</span></Link>
+        <Link className="settings-nav-card" href="/dashboard/manage"><span className="setup-icon" aria-hidden="true">☷</span><span><strong>Accounts & categories</strong><small>{accountCount} accounts · {categoryCount} categories · archives</small></span><span className="nav-arrow" aria-hidden="true">→</span></Link>
       </nav>
-      <nav className="settings-nav" aria-label="Transaction navigation"><Link className="settings-nav-card" href="/dashboard/transactions"><span className="setup-icon" aria-hidden="true">↕</span><span><strong>Transactions</strong><small>Record and review activity</small></span><span className="nav-arrow" aria-hidden="true">→</span></Link><Link className="settings-nav-card" href="/dashboard/archives"><span className="setup-icon" aria-hidden="true">↶</span><span><strong>Archives</strong><small>View or restore archived records</small></span><span className="nav-arrow" aria-hidden="true">→</span></Link></nav>
 
       <section className="balance-section" aria-labelledby="range-title">
-        <div className="section-title-row"><div><p className="eyebrow">Reporting period</p><h2 id="range-title">Income and expenses</h2></div><Link className="text-link" href="/dashboard/transactions/new">Add transaction</Link></div>
+        <div className="section-title-row"><div><p className="eyebrow">Reporting period</p><h2 id="range-title">Income and expenses</h2></div><Link className="text-link" href="/dashboard/transactions#quick-add">Add transaction</Link></div>
         <form className="date-range-form" method="get" action="/dashboard">
           <label className="filter-field">From<input className="form-input" type="date" name="from" defaultValue={fromText} required /></label>
           <label className="filter-field">To<input className="form-input" type="date" name="to" defaultValue={toText} required /></label>

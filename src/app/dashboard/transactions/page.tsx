@@ -4,6 +4,9 @@ import { listTransactions, TRANSACTION_PAGE_SIZE, type TransactionFilters } from
 import { formatMinor } from "@/lib/money/format";
 import { formatCalendarDate } from "@/lib/dates/calendar";
 import { prisma } from "@/lib/prisma";
+import { AccountSelect } from "@/components/forms/account-select";
+import { listCategoryOptions } from "@/features/categories/queries";
+import { TransactionForm } from "@/features/transactions/transaction-form";
 
 type Search = Record<string, string | string[] | undefined>;
 function scalar(value: string | string[] | undefined) { return typeof value === "string" ? value : ""; }
@@ -21,10 +24,11 @@ export default async function TransactionsPage({ searchParams }: { searchParams:
   if (filters.from && filters.to && filters.from > filters.to) { filters.from = ""; filters.to = ""; }
   if (filters.min && filters.max && Number(filters.min) > Number(filters.max)) { filters.min = ""; filters.max = ""; }
   const page = Math.max(1, Math.min(100000, Number.parseInt(scalar(params.page), 10) || 1));
-  const [[transactions, count], accounts, categories] = await Promise.all([
+  const [[transactions, count], accounts, categories, transactionCategories] = await Promise.all([
     listTransactions(user.id, filters, page),
     prisma.financeAccount.findMany({ where: { ownerId: user.id }, select: { id: true, name: true }, orderBy: { name: "asc" } }),
     prisma.category.findMany({ where: { ownerId: user.id }, select: { id: true, name: true }, orderBy: { name: "asc" } }),
+    listCategoryOptions(user.id),
   ]);
   const pages = Math.max(1, Math.ceil(count / TRANSACTION_PAGE_SIZE));
   const query = new URLSearchParams();
@@ -33,7 +37,8 @@ export default async function TransactionsPage({ searchParams }: { searchParams:
   return (
     <main className="dashboard-shell">
       <header className="dashboard-header"><Link className="brand-mark" href="/dashboard"><span className="brand-icon" aria-hidden="true">F</span><span>Finance App</span></Link><Link className="secondary-button nav-button" href="/dashboard">Dashboard</Link></header>
-      <section className="settings-heading"><p className="eyebrow">Your activity</p><h1>Transactions</h1><p className="intro">Search and filter your records. Each account balance is derived from its opening balance and transactions.</p><div className="transaction-actions"><Link className="primary-button nav-button" href="/dashboard/transactions/new">Add transaction</Link><a className="secondary-button nav-button" href={`/api/dashboard/transactions.csv?${query}`}>Export CSV</a></div></section>
+      <section className="settings-heading"><p className="eyebrow">Your activity</p><h1>Transactions</h1><p className="intro">Record, search, filter, and export activity in one place.</p><div className="transaction-actions"><a className="secondary-button nav-button" href={`/api/dashboard/transactions.csv?${query}`}>Export CSV</a></div></section>
+      <details id="quick-add" className="quick-add" open><summary>Add a transaction</summary><article className="settings-card transaction-form-card"><TransactionForm accountSelect={<AccountSelect />} categories={transactionCategories}/></article></details>
       <form className="filter-card" method="get" action="/dashboard/transactions">
         <label className="filter-field">Search description<input className="form-input" name="q" defaultValue={filters.q} maxLength={100} /></label>
         <label className="filter-field">From<input className="form-input" type="date" name="from" defaultValue={filters.from} /></label>

@@ -37,6 +37,7 @@ export async function createAccount(_state: AccountActionState, formData: FormDa
   }
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/accounts");
+  revalidatePath("/dashboard/manage");
   return { success: "Account created." };
 }
 
@@ -71,6 +72,7 @@ export async function updateAccount(_state: AccountActionState, formData: FormDa
   }
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/accounts");
+  revalidatePath("/dashboard/manage");
   return { success: "Account updated." };
 }
 
@@ -84,6 +86,7 @@ export async function archiveAccount(formData: FormData): Promise<void> {
   });
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/accounts");
+  revalidatePath("/dashboard/manage");
 }
 
 export async function restoreAccount(formData: FormData): Promise<void> {
@@ -91,5 +94,5 @@ export async function restoreAccount(formData: FormData): Promise<void> {
   const id = recordIdSchema.safeParse(formData.get("id"));
   if (!id.success) return;
   await prisma.financeAccount.updateMany({ where: { id: id.data, ownerId: user.id, archivedAt: { not: null } }, data: { archivedAt: null } });
-  revalidatePath("/dashboard"); revalidatePath("/dashboard/accounts"); revalidatePath("/dashboard/archives");
+  revalidatePath("/dashboard"); revalidatePath("/dashboard/accounts"); revalidatePath("/dashboard/manage"); revalidatePath("/dashboard/archives");
 }

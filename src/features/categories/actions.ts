@@ -32,6 +32,7 @@ export async function createCategory(_state: CategoryActionState, formData: Form
   }
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/categories");
+  revalidatePath("/dashboard/manage");
   return { success: "Category created." };
 }
 
@@ -54,6 +55,7 @@ export async function updateCategory(_state: CategoryActionState, formData: Form
   }
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/categories");
+  revalidatePath("/dashboard/manage");
   return { success: "Category updated." };
 }
 
@@ -67,6 +69,7 @@ export async function archiveCategory(formData: FormData): Promise<void> {
   });
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/categories");
+  revalidatePath("/dashboard/manage");
 }
 
 export async function restoreCategory(formData: FormData): Promise<void> {
@@ -74,5 +77,5 @@ export async function restoreCategory(formData: FormData): Promise<void> {
   const id = recordIdSchema.safeParse(formData.get("id"));
   if (!id.success) return;
   await prisma.category.updateMany({ where: { id: id.data, ownerId: user.id, archivedAt: { not: null } }, data: { archivedAt: null } });
-  revalidatePath("/dashboard"); revalidatePath("/dashboard/categories"); revalidatePath("/dashboard/archives");
+  revalidatePath("/dashboard"); revalidatePath("/dashboard/categories"); revalidatePath("/dashboard/manage"); revalidatePath("/dashboard/archives");
 }

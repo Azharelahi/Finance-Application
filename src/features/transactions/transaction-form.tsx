@@ -65,10 +65,10 @@ export function TransactionForm({ transaction, accountSelect, categories }: { tr
           </optgroup> : null}
         </select>
         {compatibleCategories.length === 0
-          ? <p className="field-hint">No categories are set up for {type.toLowerCase()} yet. {unavailableCategories.length > 0 ? "The disabled options above only apply to the other transaction type. " : ""}<Link href="/dashboard/categories">Add one or change a category to “Income and expenses”.</Link></p>
+          ? <p className="field-hint">No categories are set up for {type.toLowerCase()} yet. {unavailableCategories.length > 0 ? "The disabled options above only apply to the other transaction type. " : ""}<Link href="/dashboard/manage#categories">Add one or change a category to “Income and expenses”.</Link></p>
           : categoryNotice
-            ? <p className="field-hint">That category doesn’t apply to {type.toLowerCase()}, so it was cleared. Choose a compatible category or update it in <Link href="/dashboard/categories">category settings</Link>.</p>
-            : <p className="field-hint">Choose a category that applies to {type.toLowerCase()}, or leave this blank. {unavailableCategories.length > 0 ? <>{unavailableCategories.map((category) => category.name).join(", ")} {unavailableCategories.length === 1 ? "only applies" : "only apply"} to the other transaction type. <Link href="/dashboard/categories">Change category settings</Link>.</> : null}</p>}
+            ? <p className="field-hint">That category doesn’t apply to {type.toLowerCase()}, so it was cleared. Choose a compatible category or update it in <Link href="/dashboard/manage#categories">category settings</Link>.</p>
+            : <p className="field-hint">Choose a category that applies to {type.toLowerCase()}, or leave this blank. {unavailableCategories.length > 0 ? <>{unavailableCategories.map((category) => category.name).join(", ")} {unavailableCategories.length === 1 ? "only applies" : "only apply"} to the other transaction type. <Link href="/dashboard/manage#categories">Change category settings</Link>.</> : null}</p>}
       </div>
       <FormField label="Date" name="occurredAt" type="date" required defaultValue={transaction ? formatCalendarDate(transaction.occurredAt) : formatCalendarDate(new Date())} />
       <FormField label="Description" name="description" maxLength={240} required defaultValue={transaction?.description ?? ""} />
