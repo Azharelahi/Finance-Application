@@ -111,14 +111,14 @@ Complete a stage's exit criteria before adding the next stage. Keep each stage s
 
 **Exit:** Search, filters, page navigation, and CSV export return only the current user's matching records; empty and invalid ranges are handled clearly.
 
-### Stage 5 — Dashboard and charts
+### Stage 5 — Dashboard and charts (implemented)
 
-- Add a date-range dashboard with totals for income/expenses, account balances, spending by category, and a time series.
-- Compute chart data on the server from the same date/currency conventions as transaction reporting; avoid loading all transactions into the browser.
-- Use Recharts or Chart.js with responsive layouts, accessible labels/legends, and useful no-data states.
-- Reuse date-range controls and summary cards. Clearly define how multiple currencies are displayed; do not sum unlike currencies without an exchange-rate policy.
+- [x] Add a date-range dashboard with totals for income/expenses, account balances, spending by category, and a time series.
+- [x] Compute chart data on the server from the same date/currency conventions as transaction reporting; avoid loading all transactions into the browser.
+- [x] Use responsive, server-rendered SVG charts with accessible labels/legends, data tables, and useful no-data states.
+- [x] Reuse summary cards and date-range controls. Group currencies separately; do not sum unlike currencies without an exchange-rate policy.
 
-**Exit:** Dashboard totals agree with filtered transaction data for the selected range and the user's own records.
+**Exit:** Dashboard totals agree with filtered transaction data for the selected range and the user's own records. Date ranges use inclusive UTC calendar dates and are limited to 366 days; trends are daily through 62 days and monthly beyond that. The initial range covers the previous 366 calendar days.
 
 ### Stage 6 — Receipt uploads
 

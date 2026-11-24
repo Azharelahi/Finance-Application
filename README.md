@@ -8,10 +8,10 @@ A staged full-stack expense tracker built to practice real-world application pat
 - PostgreSQL with Prisma migrations for persistence.
 - Better Auth for email/password authentication and database-backed sessions.
 - Zod for shared client/server input schemas.
-- Recharts for dashboard charts.
+- Server-rendered SVG charts for dashboard trends and category spending.
 - Private object storage and adapters for email and scheduled jobs when those features are added.
 
-The repository is being built in stages. The current implementation includes email/password authentication, protected routes, owner-scoped account and category settings, and transaction management.
+The repository is being built in stages. The current implementation includes email/password authentication, protected routes, owner-scoped account and category settings, transaction management, and an aggregated date-range dashboard.
 
 ## Accounts and categories
 
@@ -20,6 +20,10 @@ Accounts and categories are private to their owner. Names are trimmed and unique
 ## Transactions and balances
 
 Transaction amounts are positive integer minor units stored with an account's currency; transaction type (`INCOME` or `EXPENSE`) determines the balance direction. Account balances are derived as opening balance + income − expenses and are grouped per account, so unlike currencies are never added together. Amount entry follows the selected currency's fraction digits and is capped at 2,000,000,000 minor units. Transaction dates are calendar dates stored at UTC midnight (PostgreSQL `DATE`), independent of the viewer's timezone. New transactions can reference only active accounts and categories owned by the signed-in user; edits can keep an already referenced archived account/category, and all other cross-user or incompatible references are rejected. Deleting a transaction removes it permanently. Apply the Stage 3 migration with `npm run db:deploy` after reviewing the generated migration.
+
+## Dashboard reporting
+
+The dashboard defaults to the last 366 UTC calendar days and accepts date ranges up to 366 days. Transaction dates are PostgreSQL calendar dates at UTC midnight, so report boundaries use those same inclusive calendar dates. Income, expenses, category spending, and trends are aggregated on the server and grouped by each transaction's currency; unlike currencies are never combined. Trends show daily points for ranges up to 62 days and monthly points for longer ranges. Account balances are current derived balances, shown separately per account and currency, rather than balances as of the selected report period.
 
 ## Requirements
 
