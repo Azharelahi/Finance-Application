@@ -52,7 +52,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       </nav>
 
       <section className="balance-section" aria-labelledby="range-title">
-        <div className="section-title-row"><div><p className="eyebrow">Reporting period</p><h2 id="range-title">Income and expenses</h2></div><Link className="text-link" href="/dashboard/transactions#quick-add">Add transaction</Link></div>
+        <div className="section-title-row"><div><p className="eyebrow">Reporting period</p><h2 id="range-title">Income and expenses</h2></div><Link className="text-link" href="/dashboard/transactions?add=1#quick-add">Add transaction</Link></div>
         <form className="date-range-form" method="get" action="/dashboard">
           <label className="filter-field">From<input className="form-input" type="date" name="from" defaultValue={fromText} required /></label>
           <label className="filter-field">To<input className="form-input" type="date" name="to" defaultValue={toText} required /></label>

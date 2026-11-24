@@ -15,6 +15,7 @@ function validDate(value: string) { const parsed = new Date(`${value}T00:00:00.0
 export default async function TransactionsPage({ searchParams }: { searchParams: Promise<Search> }) {
   const user = await requireUser();
   const params = await searchParams;
+  const quickAdd = scalar(params.add) === "1";
   const filters: TransactionFilters = {
     q: scalar(params.q).trim().slice(0, 100), from: validDate(scalar(params.from)), to: validDate(scalar(params.to)),
     accountId: scalar(params.account), categoryId: scalar(params.category),
@@ -37,19 +38,26 @@ export default async function TransactionsPage({ searchParams }: { searchParams:
   return (
     <main className="dashboard-shell">
       <header className="dashboard-header"><Link className="brand-mark" href="/dashboard"><span className="brand-icon" aria-hidden="true">F</span><span>Finance App</span></Link><Link className="secondary-button nav-button" href="/dashboard">Dashboard</Link></header>
-      <section className="settings-heading"><p className="eyebrow">Your activity</p><h1>Transactions</h1><p className="intro">Record, search, filter, and export activity in one place.</p><div className="transaction-actions"><a className="secondary-button nav-button" href={`/api/dashboard/transactions.csv?${query}`}>Export CSV</a></div></section>
-      <details id="quick-add" className="quick-add" open><summary>Add a transaction</summary><article className="settings-card transaction-form-card"><TransactionForm accountSelect={<AccountSelect />} categories={transactionCategories}/></article></details>
-      <form className="filter-card" method="get" action="/dashboard/transactions">
-        <label className="filter-field">Search description<input className="form-input" name="q" defaultValue={filters.q} maxLength={100} /></label>
-        <label className="filter-field">From<input className="form-input" type="date" name="from" defaultValue={filters.from} /></label>
-        <label className="filter-field">To<input className="form-input" type="date" name="to" defaultValue={filters.to} /></label>
-        <label className="filter-field">Account<select className="form-input" name="account" defaultValue={filters.accountId}><option value="">All accounts</option>{accounts.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}</select></label>
-        <label className="filter-field">Category<select className="form-input" name="category" defaultValue={filters.categoryId}><option value="">All categories</option>{categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}</select></label>
-        <label className="filter-field">Type<select className="form-input" name="type" defaultValue={filters.type ?? ""}><option value="">Income and expense</option><option value="INCOME">Income</option><option value="EXPENSE">Expense</option></select></label>
-        <label className="filter-field">Min amount (minor units)<input className="form-input" inputMode="numeric" name="min" defaultValue={filters.min} /></label>
-        <label className="filter-field">Max amount (minor units)<input className="form-input" inputMode="numeric" name="max" defaultValue={filters.max} /></label>
-        <div className="filter-actions"><button className="primary-button" type="submit">Apply filters</button><Link className="text-link" href="/dashboard/transactions">Clear</Link></div>
+      <section className="settings-heading"><p className="eyebrow">Your activity</p><h1>Transactions</h1><p className="intro">Record, search, filter, and export activity in one place.</p><div className="transaction-actions"><Link className="primary-button nav-button" href="/dashboard/transactions?add=1#quick-add">Add transaction</Link><a className="secondary-button nav-button" href={`/api/dashboard/transactions.csv?${query}`}>Export CSV</a></div></section>
+      <section className="transaction-browse" aria-labelledby="browse-title"><div className="manage-section-heading"><div><p className="eyebrow">Search and review</p><h2 id="browse-title">Find transactions</h2></div></div>
+      <form className="transaction-search" method="get" action="/dashboard/transactions">
+        <label className="filter-field" htmlFor="transaction-search">Search transactions</label>
+        <div className="transaction-search-controls"><input className="form-input" id="transaction-search" name="q" defaultValue={filters.q} placeholder="Description, account, or category" maxLength={100} /><button className="primary-button" type="submit">Search</button><Link className="text-link" href="/dashboard/transactions">Clear</Link></div>
       </form>
+      <details className="advanced-filters" open={Boolean(filters.from || filters.to || filters.accountId || filters.categoryId || filters.type || filters.min || filters.max)}>
+        <summary>Filter by date, account, category, type, or amount</summary>
+        <form className="filter-card" method="get" action="/dashboard/transactions">
+          <input type="hidden" name="q" value={filters.q} />
+          <label className="filter-field">From<input className="form-input" type="date" name="from" defaultValue={filters.from} /></label>
+          <label className="filter-field">To<input className="form-input" type="date" name="to" defaultValue={filters.to} /></label>
+          <label className="filter-field">Account<select className="form-input" name="account" defaultValue={filters.accountId}><option value="">All accounts</option>{accounts.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}</select></label>
+          <label className="filter-field">Category<select className="form-input" name="category" defaultValue={filters.categoryId}><option value="">All categories</option>{categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}</select></label>
+          <label className="filter-field">Type<select className="form-input" name="type" defaultValue={filters.type ?? ""}><option value="">Income and expense</option><option value="INCOME">Income</option><option value="EXPENSE">Expense</option></select></label>
+          <label className="filter-field">Minimum amount (minor units)<input className="form-input" inputMode="numeric" name="min" defaultValue={filters.min} /></label>
+          <label className="filter-field">Maximum amount (minor units)<input className="form-input" inputMode="numeric" name="max" defaultValue={filters.max} /></label>
+          <div className="filter-actions"><button className="primary-button" type="submit">Apply filters</button><Link className="text-link" href={filters.q ? `/dashboard/transactions?q=${encodeURIComponent(filters.q)}` : "/dashboard/transactions"}>Clear filters</Link></div>
+        </form>
+      </details>
       <p className="result-count">{count} {count === 1 ? "transaction" : "transactions"}{count > 0 ? ` · Page ${page} of ${pages}` : ""}</p>
       <section className="settings-list" aria-label="Transactions">
         {transactions.length === 0 ? <div className="empty-state"><h2>No matching transactions</h2><p>Try changing or clearing your filters.</p></div> : transactions.map((transaction) => (
@@ -60,6 +68,8 @@ export default async function TransactionsPage({ searchParams }: { searchParams:
         ))}
       </section>
       {count > 0 && <nav className="pagination" aria-label="Transaction pages">{page > 1 ? <Link className="secondary-button nav-button" href={pageLink(page - 1)}>Previous</Link> : <span />}{page < pages ? <Link className="secondary-button nav-button" href={pageLink(page + 1)}>Next</Link> : <span />}</nav>}
+      </section>
+      <section className="transaction-create-section" aria-labelledby="create-title"><div className="manage-section-heading"><div><p className="eyebrow">New activity</p><h2 id="create-title">Add transaction</h2></div></div><details id="quick-add" className="quick-add" open={quickAdd}><summary>{quickAdd ? "Transaction form" : "Open transaction form"}</summary><article className="settings-card transaction-form-card"><TransactionForm accountSelect={<AccountSelect />} categories={transactionCategories}/></article></details></section>
     </main>
   );
 }
